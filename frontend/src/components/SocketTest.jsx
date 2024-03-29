@@ -49,7 +49,16 @@ const SocketTest = () => {
   }, [selectedFile, selectedUser]);
 
   const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
+    const file = e.target.files[0];
+    if (file && file.size > MAX_FILE_SIZE) {
+      alert("File size exceeds the 5MB limit.");
+
+      e.target.value = null;
+    } else {
+      setSelectedFile(file);
+    }
   };
 
   const handleUserSelection = (e) => {
