@@ -1,7 +1,10 @@
+import SocketTest from "./components/SocketTest";
+
 function App() {
   return (
-    <div className="text-3xl font-bold underline">
-      <h1>DropZone</h1>
+    <div>
+      <h1 className="text-3xl font-bold underline mb-4">DropZone</h1>
+      <SocketTest />
     </div>
   );
 }
