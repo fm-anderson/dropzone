@@ -5,29 +5,30 @@ const cors = require("cors");
 
 const app = express();
 const server = http.createServer(app);
-
-app.use(cors());
-
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
+app.use(cors());
+
+let connectedUsers = {};
 
 app.get("/", (req, res) => {
   res.send("DropZone by fm-anderson");
 });
 
 io.on("connection", (socket) => {
-  console.log("a user connected");
+  console.log("a user connected: " + socket.id);
+  connectedUsers[socket.id] = { id: socket.id };
 
-  socket.on("file-selected", (data) => {
-    console.log(`Received file: ${data.fileName}`);
-  });
+  io.emit("users-list", Object.values(connectedUsers));
 
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    console.log("user disconnected: " + socket.id);
+    delete connectedUsers[socket.id];
+    io.emit("users-list", Object.values(connectedUsers));
   });
 });
 

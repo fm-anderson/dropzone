@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
 const SOCKET_URL = "http://localhost:3000";
 
 const SocketTest = () => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const socket = io(SOCKET_URL);
@@ -25,6 +26,11 @@ const SocketTest = () => {
       console.log("Connected to the server");
     });
 
+    socket.on("users-list", (connectedUsers) => {
+      setUsers(connectedUsers);
+      console.log(connectedUsers);
+    });
+
     // clean up
     return () => {
       socket.disconnect();
@@ -39,6 +45,14 @@ const SocketTest = () => {
     <div>
       <h1>Socket.io Connection Test</h1>
       <input type="file" onChange={handleFileChange} />
+
+      <div className="my-10">
+        <ul>
+          {users.map((user) => (
+            <li key={user.id}>{user.id}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
