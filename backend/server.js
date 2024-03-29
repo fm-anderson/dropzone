@@ -22,6 +22,10 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   console.log("a user connected");
 
+  socket.on("file-selected", (data) => {
+    console.log(`Received file: ${data.fileName}`);
+  });
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
