@@ -25,6 +25,10 @@ io.on("connection", (socket) => {
 
   io.emit("users-list", Object.values(connectedUsers));
 
+  socket.on("send-file", ({ fileData, fileName, to }) => {
+    socket.to(to).emit("receive-file", { fileData, fileName, from: socket.id });
+  });
+
   socket.on("disconnect", () => {
     console.log("user disconnected: " + socket.id);
     delete connectedUsers[socket.id];
